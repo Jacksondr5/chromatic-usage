@@ -1,4 +1,8 @@
+"use client";
+
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
 
 type Inputs = {
@@ -17,25 +21,27 @@ export const ChromaticAppForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex w-60 flex-col gap-4 text-black"
+      className="flex w-[38rem] gap-4 text-black"
     >
-      <input
-        type="text"
-        placeholder="App ID"
-        {...register("id", { required: true })}
-      />
-      <input
+      <Input
+        className="w-5/12"
         type="text"
         placeholder="App Name"
         {...register("name", { required: true })}
       />
-      <button
-        className="text-white"
+      <Input
+        className="w-5/12"
+        type="text"
+        placeholder="App ID"
+        {...register("id", { required: true })}
+      />
+      <Button
+        className="w-2/12"
         type="submit"
         disabled={createChromaticApp.isPending}
       >
-        {createChromaticApp.isPending ? "Submitting..." : "Add Chromatic App"}
-      </button>
+        Add
+      </Button>
     </form>
   );
 };
