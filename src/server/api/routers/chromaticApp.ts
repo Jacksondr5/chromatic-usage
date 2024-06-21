@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -13,4 +14,12 @@ export const chromaticAppRouter = createTRPCRouter({
         name: input.name,
       });
     }),
+  delete: publicProcedure
+    .input(z.string().min(1))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(chromaticApps).where(eq(chromaticApps.id, input));
+    }),
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.select().from(chromaticApps);
+  }),
 });

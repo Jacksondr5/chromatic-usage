@@ -1,9 +1,6 @@
 "use client";
 import { useState } from "react";
-import { AreaChart } from "./components/AreaChart";
-import { FileUpload } from "./components/FileUpload";
-import { ChromaticBuild, parseChromaticCsv } from "~/parseChromaticCsv";
-import { ChromaticAppForm } from "./components/ChromaticAppForm";
+import { type ChromaticBuild, parseChromaticCsv } from "~/parseChromaticCsv";
 
 export default function HomePage() {
   const [chromaticData, setChromaticData] = useState<ChromaticBuild[]>([]);
@@ -29,7 +26,6 @@ export default function HomePage() {
         <label htmlFor="chromatic-csv">Upload Chromatic CSV</label>
         {/* <FileUpload onChange={handleFileUpload} />
         {chromaticData.length > 0 && <AreaChart data={chromaticData} />} */}
-        <ChromaticAppForm />
       </div>
     </main>
   );
