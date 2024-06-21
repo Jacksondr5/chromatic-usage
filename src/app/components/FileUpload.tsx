@@ -1,6 +1,5 @@
 "use client";
 
-import { loadFile } from "~/database/loadFile";
 import { parseChromaticCsv } from "~/parseChromaticCsv";
 
 interface FileUploadProps {
@@ -21,7 +20,8 @@ export const FileUpload = ({ onChange }: FileUploadProps) => (
         if (typeof csv === "string") {
           // console.log(csv);
           const builds = parseChromaticCsv(csv);
-          await loadFile(builds);
+          // TODO: replace with trpc mutation
+          // await loadFile(builds);
         }
       };
       reader.readAsText(file);

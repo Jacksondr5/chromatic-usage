@@ -1,23 +1,34 @@
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { api } from "~/trpc/react";
 
+type Inputs = {
+  id: string;
+  name: string;
+};
+
 export const ChromaticAppForm = () => {
+  const { register, handleSubmit } = useForm<Inputs>();
   const createChromaticApp = api.chromaticApp.add.useMutation();
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+    createChromaticApp.mutate(data);
+  };
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        console.log("test");
-        console.log(e.currentTarget.id.value);
-        createChromaticApp.mutate({
-          id: e.currentTarget.id.value,
-          name: e.currentTarget.name.value,
-        });
-      }}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex w-60 flex-col gap-4 text-black"
     >
-      <input type="text" name="id" placeholder="App ID" />
-      <input type="text" name="name" placeholder="App Name" />
+      <input
+        type="text"
+        placeholder="App ID"
+        {...register("id", { required: true })}
+      />
+      <input
+        type="text"
+        placeholder="App Name"
+        {...register("name", { required: true })}
+      />
       <button
         className="text-white"
         type="submit"
