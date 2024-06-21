@@ -8,12 +8,12 @@ const csvHeader =
   "Date,App ID,Build ID,Repository slug,Branch name,Build number,Skipped snapshots,Chrome snapshots,Firefox snapshots,Internet Explorer snapshots,Safari snapshots,Edge snapshots";
 const s = (value?: string | number, omitComma = false) =>
   `${value ?? ""}${omitComma ? "" : ","}`;
-type TestChromaticCsv = Partial<Omit<ChromaticCsv, "Date">> & { Date?: string };
+type TestChromaticCsv = Partial<Omit<ChromaticCsv, "date">> & { date?: string };
 const buildCsv = (data: TestChromaticCsv[]) => {
   const csvData = data
     .map(
       (x) =>
-        s(x.Date) +
+        s(x.date) +
         s(x.appId) +
         s(x.buildId) +
         s(x.repositorySlug) +
@@ -38,7 +38,7 @@ describe("parseChromaticCsv", () => {
   it("should parse a full row of data", () => {
     const csv = buildCsv([
       {
-        Date: "2024-06-03 05:08:44",
+        date: "2024-06-03 05:08:44",
         appId: "123",
         buildId: "456",
         repositorySlug: "jacksondr5/chromatic-usage",
@@ -55,25 +55,25 @@ describe("parseChromaticCsv", () => {
     const result = parseChromaticCsv(csv);
     expect(result).toEqual([
       {
-        Date: new Date("2024-06-03 05:08:44"),
-        AppId: "123",
-        BuildId: "456",
-        RepositorySlug: "jacksondr5/chromatic-usage",
-        Branch: "main",
-        BuildNumber: 1,
-        SkippedSnapshots: 2,
-        ChromeSnapshots: 3,
-        FirefoxSnapshots: 4,
-        InternetExplorerSnapshots: 5,
-        SafariSnapshots: 6,
-        EdgeSnapshots: 7,
+        date: "2024-06-03 05:08:44",
+        appId: "123",
+        buildId: "456",
+        repositorySlug: "jacksondr5/chromatic-usage",
+        branch: "main",
+        buildNumber: 1,
+        skippedSnapshots: 2,
+        chromeSnapshots: 3,
+        firefoxSnapshots: 4,
+        internetExplorerSnapshots: 5,
+        safariSnapshots: 6,
+        edgeSnapshots: 7,
       },
     ]);
   });
   it("should handle optional values", () => {
     const csv = buildCsv([
       {
-        Date: "2024-06-03 05:08:44",
+        date: "2024-06-03 05:08:44",
         appId: "123",
         buildId: "456",
         repositorySlug: "jacksondr5/chromatic-usage",
@@ -84,18 +84,18 @@ describe("parseChromaticCsv", () => {
     const result = parseChromaticCsv(csv);
     expect(result).toEqual([
       {
-        Date: new Date("2024-06-03 05:08:44"),
-        AppId: "123",
-        BuildId: "456",
-        RepositorySlug: "jacksondr5/chromatic-usage",
-        Branch: "main",
-        BuildNumber: 1,
-        SkippedSnapshots: 0,
-        ChromeSnapshots: 0,
-        FirefoxSnapshots: 0,
-        InternetExplorerSnapshots: 0,
-        SafariSnapshots: 0,
-        EdgeSnapshots: 0,
+        date: "2024-06-03 05:08:44",
+        appId: "123",
+        buildId: "456",
+        repositorySlug: "jacksondr5/chromatic-usage",
+        branch: "main",
+        buildNumber: 1,
+        skippedSnapshots: 0,
+        chromeSnapshots: 0,
+        firefoxSnapshots: 0,
+        internetExplorerSnapshots: 0,
+        safariSnapshots: 0,
+        edgeSnapshots: 0,
       },
     ]);
   });
@@ -106,7 +106,7 @@ describe("parseChromaticCsv", () => {
   it("should throw if the expected header values are not present", () => {
     const csv = buildCsv([
       {
-        Date: "2024-06-03 05:08:44",
+        date: "2024-06-03 05:08:44",
         appId: "123",
         buildId: "456",
         repositorySlug: "jacksondr5/chromatic-usage",

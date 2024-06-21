@@ -54,13 +54,13 @@ const keyMap: Record<keyof ChromaticCsv, (typeof expectedHeaders)[number]> = {
 } as const;
 
 const numericKeys = [
-  "BuildNumber",
-  "SkippedSnapshots",
-  "ChromeSnapshots",
-  "FirefoxSnapshots",
-  "SafariSnapshots",
-  "EdgeSnapshots",
-  "InternetExplorerSnapshots",
+  "buildNumber",
+  "skippedSnapshots",
+  "chromeSnapshots",
+  "firefoxSnapshots",
+  "safariSnapshots",
+  "edgeSnapshots",
+  "internetExplorerSnapshots",
 ];
 const parseValue = (value: string | undefined, key: keyof ChromaticCsv) => {
   // if (key === "date") {
