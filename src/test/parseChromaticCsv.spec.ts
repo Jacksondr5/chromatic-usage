@@ -6,8 +6,6 @@ import {
 
 const csvHeader =
   "Date,App ID,Build ID,Repository slug,Branch name,Build number,Skipped snapshots,Chrome snapshots,Firefox snapshots,Internet Explorer snapshots,Safari snapshots,Edge snapshots";
-const defaultCsv = `${csvHeader}
-5/1/24 8:19,65427034926092d8e9b96c19,6631fb2eab74b00107d1b01f,tbol-com/tbol-core,develop,1998,0,0,0,0,0,`;
 const s = (value?: string | number, omitComma = false) =>
   `${value ?? ""}${omitComma ? "" : ","}`;
 type TestChromaticCsv = Partial<Omit<ChromaticCsv, "Date">> & { Date?: string };
@@ -16,17 +14,17 @@ const buildCsv = (data: TestChromaticCsv[]) => {
     .map(
       (x) =>
         s(x.Date) +
-        s(x.AppId) +
-        s(x.BuildId) +
-        s(x.RepositorySlug) +
-        s(x.Branch) +
-        s(x.BuildNumber) +
-        s(x.SkippedSnapshots) +
-        s(x.ChromeSnapshots) +
-        s(x.FirefoxSnapshots) +
-        s(x.InternetExplorerSnapshots) +
-        s(x.SafariSnapshots) +
-        s(x.EdgeSnapshots, true),
+        s(x.appId) +
+        s(x.buildId) +
+        s(x.repositorySlug) +
+        s(x.branch) +
+        s(x.buildNumber) +
+        s(x.skippedSnapshots) +
+        s(x.chromeSnapshots) +
+        s(x.firefoxSnapshots) +
+        s(x.internetExplorerSnapshots) +
+        s(x.safariSnapshots) +
+        s(x.edgeSnapshots, true),
     )
     .join("\n");
   return `${csvHeader}\n${csvData}`;
@@ -41,17 +39,17 @@ describe("parseChromaticCsv", () => {
     const csv = buildCsv([
       {
         Date: "2024-06-03 05:08:44",
-        AppId: "123",
-        BuildId: "456",
-        RepositorySlug: "jacksondr5/chromatic-usage",
-        Branch: "main",
-        BuildNumber: 1,
-        SkippedSnapshots: 2,
-        ChromeSnapshots: 3,
-        FirefoxSnapshots: 4,
-        InternetExplorerSnapshots: 5,
-        SafariSnapshots: 6,
-        EdgeSnapshots: 7,
+        appId: "123",
+        buildId: "456",
+        repositorySlug: "jacksondr5/chromatic-usage",
+        branch: "main",
+        buildNumber: 1,
+        skippedSnapshots: 2,
+        chromeSnapshots: 3,
+        firefoxSnapshots: 4,
+        internetExplorerSnapshots: 5,
+        safariSnapshots: 6,
+        edgeSnapshots: 7,
       },
     ]);
     const result = parseChromaticCsv(csv);
@@ -76,11 +74,11 @@ describe("parseChromaticCsv", () => {
     const csv = buildCsv([
       {
         Date: "2024-06-03 05:08:44",
-        AppId: "123",
-        BuildId: "456",
-        RepositorySlug: "jacksondr5/chromatic-usage",
-        Branch: "main",
-        BuildNumber: 1,
+        appId: "123",
+        buildId: "456",
+        repositorySlug: "jacksondr5/chromatic-usage",
+        branch: "main",
+        buildNumber: 1,
       },
     ]);
     const result = parseChromaticCsv(csv);
@@ -109,11 +107,11 @@ describe("parseChromaticCsv", () => {
     const csv = buildCsv([
       {
         Date: "2024-06-03 05:08:44",
-        AppId: "123",
-        BuildId: "456",
-        RepositorySlug: "jacksondr5/chromatic-usage",
-        Branch: "main",
-        BuildNumber: 1,
+        appId: "123",
+        buildId: "456",
+        repositorySlug: "jacksondr5/chromatic-usage",
+        branch: "main",
+        buildNumber: 1,
       },
     ]);
     const csvWithBadHeader = csv.replace("Date", "BAD");

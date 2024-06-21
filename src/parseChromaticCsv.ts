@@ -1,21 +1,20 @@
 export type ChromaticCsv = {
-  AppId: string;
-
-  BuildId: string;
-  Date: Date;
-  RepositorySlug: string;
-  Branch: string;
-  BuildNumber: number;
-  SkippedSnapshots: number;
-  ChromeSnapshots: number;
-  FirefoxSnapshots: number;
-  SafariSnapshots: number;
-  EdgeSnapshots: number;
-  InternetExplorerSnapshots: number;
+  appId: string;
+  buildId: string;
+  date: string;
+  repositorySlug: string;
+  branch: string;
+  buildNumber: number;
+  skippedSnapshots: number;
+  chromeSnapshots: number;
+  firefoxSnapshots: number;
+  safariSnapshots: number;
+  edgeSnapshots: number;
+  internetExplorerSnapshots: number;
 };
 
 export type ChromaticBuild = ChromaticCsv & {
-  AppName: string;
+  appName: string;
 };
 
 export const ParseErrorMessages = {
@@ -40,18 +39,18 @@ const expectedHeaders = [
 ] as const;
 
 const keyMap: Record<keyof ChromaticCsv, (typeof expectedHeaders)[number]> = {
-  AppId: "App ID",
-  BuildId: "Build ID",
-  Date: "Date",
-  RepositorySlug: "Repository slug",
-  Branch: "Branch name",
-  BuildNumber: "Build number",
-  SkippedSnapshots: "Skipped snapshots",
-  ChromeSnapshots: "Chrome snapshots",
-  FirefoxSnapshots: "Firefox snapshots",
-  SafariSnapshots: "Safari snapshots",
-  EdgeSnapshots: "Edge snapshots",
-  InternetExplorerSnapshots: "Internet Explorer snapshots",
+  appId: "App ID",
+  buildId: "Build ID",
+  date: "Date",
+  repositorySlug: "Repository slug",
+  branch: "Branch name",
+  buildNumber: "Build number",
+  skippedSnapshots: "Skipped snapshots",
+  chromeSnapshots: "Chrome snapshots",
+  firefoxSnapshots: "Firefox snapshots",
+  safariSnapshots: "Safari snapshots",
+  edgeSnapshots: "Edge snapshots",
+  internetExplorerSnapshots: "Internet Explorer snapshots",
 } as const;
 
 const numericKeys = [
@@ -64,10 +63,10 @@ const numericKeys = [
   "InternetExplorerSnapshots",
 ];
 const parseValue = (value: string | undefined, key: keyof ChromaticCsv) => {
-  if (key === "Date") {
-    // Date is always defined
-    return new Date(value!);
-  }
+  // if (key === "date") {
+  //   // Date is always defined
+  //   return new Date(value!);
+  // }
   if (numericKeys.includes(key)) {
     return value ? parseInt(value, 10) : 0;
   }
@@ -88,7 +87,6 @@ export const parseChromaticCsv = (csv: string): ChromaticBuild[] => {
     throw new Error(ParseErrorMessages.MissingExpectedHeaders(missingHeaders));
   }
   if (rows.length === 0) return [];
-
   return rows.map((row) => {
     const values = row.split(",");
     return Object.keys(keyMap).reduce((acc, key) => {
