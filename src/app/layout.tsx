@@ -1,6 +1,8 @@
 import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
+import Script from "next/script";
+import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata = {
   title: "Create T3 App",
@@ -15,7 +17,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+      <body>
+        {" "}
+        <TRPCReactProvider>{children}</TRPCReactProvider>
+      </body>
+      <Script
+        crossOrigin="anonymous"
+        integrity="sha512-+6Q7hv5pGUBXOuHWw8OdQx3ac7DzM3oJhYqz7SHDku0yl9EBdMqegoPed4GsHRoNF/VQYK2LTYewAIEBrEf/3w=="
+        referrerPolicy="no-referrer"
+        src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"
+        strategy="lazyOnload"
+      />
     </html>
   );
 }

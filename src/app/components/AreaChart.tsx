@@ -1,11 +1,13 @@
 "use client";
 
 import { type EChartsType, init } from "echarts";
+import { type ECBasicOption } from "echarts/types/dist/shared.js";
 import { useState, useRef, useEffect } from "react";
+import { ChromaticBuild } from "~/parseChromaticCsv";
 
-const option = {
+const defaultOption = {
   title: {
-    text: "Stacked Area Chart",
+    text: "Chromatic Usage",
   },
   tooltip: {
     trigger: "axis",
@@ -16,9 +18,7 @@ const option = {
       },
     },
   },
-  legend: {
-    data: ["Email", "Union Ads", "Video Ads", "Direct", "Search Engine"],
-  },
+
   toolbox: {
     feature: {
       saveAsImage: {},
@@ -42,65 +42,13 @@ const option = {
       type: "value",
     },
   ],
-  series: [
-    {
-      name: "Email",
-      type: "line",
-      stack: "Total",
-      areaStyle: {},
-      emphasis: {
-        focus: "series",
-      },
-      data: [120, 132, 101, 134, 90, 230, 210],
-    },
-    {
-      name: "Union Ads",
-      type: "line",
-      stack: "Total",
-      areaStyle: {},
-      emphasis: {
-        focus: "series",
-      },
-      data: [220, 182, 191, 234, 290, 330, 310],
-    },
-    {
-      name: "Video Ads",
-      type: "line",
-      stack: "Total",
-      areaStyle: {},
-      emphasis: {
-        focus: "series",
-      },
-      data: [150, 232, 201, 154, 190, 330, 410],
-    },
-    {
-      name: "Direct",
-      type: "line",
-      stack: "Total",
-      areaStyle: {},
-      emphasis: {
-        focus: "series",
-      },
-      data: [320, 332, 301, 334, 390, 330, 320],
-    },
-    {
-      name: "Search Engine",
-      type: "line",
-      stack: "Total",
-      label: {
-        show: true,
-        position: "top",
-      },
-      areaStyle: {},
-      emphasis: {
-        focus: "series",
-      },
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
-    },
-  ],
 };
 
-export const AreaChart = () => {
+export interface AreaChartProps {
+  data: ChromaticBuild[];
+}
+
+export const AreaChart = ({ data }: AreaChartProps) => {
   const [chart, setChart] = useState<EChartsType>();
   const ref = useRef(null);
   useEffect(() => {
@@ -128,7 +76,22 @@ export const AreaChart = () => {
       return;
     }
 
-    chart.setOption(option);
-  }, [chart]);
-  return <div className={"min-h-80 min-w-80"} ref={ref} role="figure" />;
+    chart.setOption({
+      ...defaultOption,
+      legend: {
+        data: data.map((x) => x.appName),
+        series: data.map((x) => ({
+          name: x.appName,
+          type: "line",
+          stack: "Total",
+          areaStyle: {},
+          emphasis: {
+            focus: "series",
+          },
+          data: [120, 132, 101, 134, 90, 230, 210],
+        })),
+      },
+    });
+  }, [chart, data]);
+  return <div className="h-96 w-2/3" ref={ref} role="figure" />;
 };
