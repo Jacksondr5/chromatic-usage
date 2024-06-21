@@ -1,11 +1,14 @@
 TODO:
 
-- [ ] Setup CI
-- [ ] Add file upload and parse
+- [x] Setup CI
+- [x] Add file upload and parse
+  - [ ] add contents to DB
+  - [ ] clear on new file upload
 - [ ] Convert app IDs to names
-- [ ] Store app ID -> name in local storage and prompt for it if needed
+- [x] Store app ID -> name in DB
+  - [ ] prompt for it if needed
 - [ ] Add graphs for the usage
-- [ ] Setup Vercel deployment
+<!-- - [ ] Setup Vercel deployment -->
 
 # Data views
 
