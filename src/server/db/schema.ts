@@ -11,9 +11,9 @@ export const createTable = sqliteTableCreator((name) => `test_${name}`);
 export const builds = createTable(
   "builds",
   {
-    id: text("buildId").primaryKey(),
+    buildId: text("buildId").primaryKey(),
     appId: text("appId").notNull(),
-    date: int("date").notNull(),
+    date: text("date").notNull(),
     repositorySlug: text("repositorySlug").notNull(),
     branch: text("branch").notNull(),
     buildNumber: int("buildNumber").notNull(),

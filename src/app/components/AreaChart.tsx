@@ -3,7 +3,7 @@
 import { type EChartsType, init } from "echarts";
 import { type ECBasicOption } from "echarts/types/dist/shared.js";
 import { useState, useRef, useEffect } from "react";
-import { ChromaticBuild } from "~/parseChromaticCsv";
+import { ChromaticBuild } from "~/server/parseChromaticCsv";
 
 const defaultOption = {
   title: {

@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "e7ed90e3-9eb9-4a7d-88c3-230990aa33b6",
+  "id": "7ca3ee0c-d828-4cab-9863-5eff092acb2e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "test_builds": {
@@ -23,7 +23,7 @@
         },
         "date": {
           "name": "date",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

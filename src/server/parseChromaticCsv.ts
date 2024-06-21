@@ -63,10 +63,6 @@ const numericKeys = [
   "internetExplorerSnapshots",
 ];
 const parseValue = (value: string | undefined, key: keyof ChromaticCsv) => {
-  // if (key === "date") {
-  //   // Date is always defined
-  //   return new Date(value!);
-  // }
   if (numericKeys.includes(key)) {
     return value ? parseInt(value, 10) : 0;
   }
@@ -87,9 +83,11 @@ export const parseChromaticCsv = (csv: string): ChromaticBuild[] => {
     throw new Error(ParseErrorMessages.MissingExpectedHeaders(missingHeaders));
   }
   if (rows.length === 0) return [];
-  return rows.map((row) => {
+  const retVal: ChromaticBuild[] = [];
+  rows.forEach((row) => {
+    if (row.trim() === "") return;
     const values = row.split(",");
-    return Object.keys(keyMap).reduce((acc, key) => {
+    const build = Object.keys(keyMap).reduce((acc, key) => {
       const csvKey = keyMap[key as keyof ChromaticCsv];
       const index = headers.indexOf(csvKey);
       return {
@@ -97,5 +95,7 @@ export const parseChromaticCsv = (csv: string): ChromaticBuild[] => {
         [key]: parseValue(values[index], key as keyof ChromaticCsv),
       };
     }, {} as ChromaticBuild);
+    retVal.push(build);
   });
+  return retVal;
 };

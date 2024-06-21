@@ -1,5 +1,6 @@
 import { chromaticAppRouter } from "~/server/api/routers/chromaticApp";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import { buildRouter } from "./routers/build";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   chromaticApp: chromaticAppRouter,
+  build: buildRouter,
 });
 
 // export type definition of API
