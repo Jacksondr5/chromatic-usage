@@ -2,12 +2,14 @@ TODO:
 
 - [x] Setup CI
 - [x] Add file upload and parse
-  - [ ] add contents to DB
-  - [ ] clear on new file upload
+  - [x] add contents to DB
+  - [x] clear on new file upload
 - [ ] Convert app IDs to names
 - [x] Store app ID -> name in DB
   - [ ] prompt for it if needed
 - [ ] Add graphs for the usage
+- [ ] Add column for total snapshots per build
+- [ ] Add error checking when you upload a CSV that the apps exist. Direct people to settings.
 <!-- - [ ] Setup Vercel deployment -->
 
 # Data views

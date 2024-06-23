@@ -8,6 +8,20 @@
       "when": 1719007794637,
       "tag": "0000_wooden_nomad",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1719104069866,
+      "tag": "0001_stormy_fallen_one",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1719105992223,
+      "tag": "0002_gorgeous_whistler",
+      "breakpoints": true
     }
   ]
 }

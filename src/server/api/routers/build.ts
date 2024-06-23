@@ -1,8 +1,13 @@
+import { desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { builds } from "~/server/db/schema";
-import { ChromaticBuild, ChromaticCsv } from "~/server/parseChromaticCsv";
+import { builds, chromaticApps } from "~/server/db/schema";
+import { type ChromaticCsv } from "~/server/parseChromaticCsv";
+
+type ProcessedCsv = ChromaticCsv & {
+  totalSnapshots: number;
+};
 
 export const buildRouter = createTRPCRouter({
   uploadBatch: publicProcedure
@@ -30,9 +35,18 @@ export const buildRouter = createTRPCRouter({
 
       // Inserting too many at once causes issues
       const chunkSize = 100;
-      const chunks: ChromaticCsv[][] = [];
-      for (let i = 0; i < input.length; i += chunkSize) {
-        const chunk = input.slice(i, i + chunkSize);
+      const processedBuilds = input.map((x) => ({
+        ...x,
+        totalSnapshots:
+          x.chromeSnapshots +
+          x.firefoxSnapshots +
+          x.safariSnapshots +
+          x.edgeSnapshots +
+          x.internetExplorerSnapshots,
+      }));
+      const chunks: ProcessedCsv[][] = [];
+      for (let i = 0; i < processedBuilds.length; i += chunkSize) {
+        const chunk = processedBuilds.slice(i, i + chunkSize);
         chunks.push(chunk);
       }
       for (const chunk of chunks) {
@@ -43,5 +57,26 @@ export const buildRouter = createTRPCRouter({
   clear: publicProcedure.mutation(async ({ ctx }) => {
     // eslint-disable-next-line drizzle/enforce-delete-with-where
     await ctx.db.delete(builds).execute();
+  }),
+
+  dailySnapshotsByApp: publicProcedure.query(async ({ ctx }) => {
+    const dateSql = sql<string>`date(date)`;
+    const res = await ctx.db
+      .select({
+        appName: chromaticApps.name,
+        date: dateSql,
+        chromeSnapshots: sql<number>`sum(chromeSnapshots)`,
+        firefoxSnapshots: sql<number>`sum(firefoxSnapshots)`,
+        safariSnapshots: sql<number>`sum(safariSnapshots)`,
+        edgeSnapshots: sql<number>`sum(edgeSnapshots)`,
+        internetExplorerSnapshots: sql<number>`sum(internetExplorerSnapshots)`,
+        totalSnapshots: sql<number>`sum(totalSnapshots)`,
+      })
+      .from(builds)
+      .leftJoin(chromaticApps, eq(builds.appId, chromaticApps.id))
+      .groupBy((x) => [x.appName, dateSql])
+      .orderBy(desc(builds.date))
+      .execute();
+    return res;
   }),
 });
