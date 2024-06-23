@@ -1,7 +1,7 @@
 CREATE TABLE `test_builds` (
 	`buildId` text PRIMARY KEY NOT NULL,
 	`appId` text NOT NULL,
-	`date` integer NOT NULL,
+	`date` text NOT NULL,
 	`repositorySlug` text NOT NULL,
 	`branch` text NOT NULL,
 	`buildNumber` integer NOT NULL,

@@ -5,15 +5,15 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
 
-type Inputs = {
+type FormInputs = {
   id: string;
   name: string;
 };
 
 export const ChromaticAppForm = () => {
-  const { register, handleSubmit } = useForm<Inputs>();
+  const { register, handleSubmit } = useForm<FormInputs>();
   const createChromaticApp = api.chromaticApp.add.useMutation();
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<FormInputs> = (data) => {
     console.log(data);
     createChromaticApp.mutate(data);
   };

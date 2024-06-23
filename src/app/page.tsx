@@ -1,6 +1,11 @@
 "use client";
 import { useState } from "react";
-import { type ChromaticBuild, parseChromaticCsv } from "~/parseChromaticCsv";
+import {
+  type ChromaticBuild,
+  parseChromaticCsv,
+} from "~/server/parseChromaticCsv";
+import { FileUpload } from "./FileUpload";
+import { Label } from "~/components/ui/label";
 
 export default function HomePage() {
   const [chromaticData, setChromaticData] = useState<ChromaticBuild[]>([]);
@@ -20,12 +25,11 @@ export default function HomePage() {
     }
   };
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center ">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
         <h1>Chromatic Usage Tool</h1>
-        <label htmlFor="chromatic-csv">Upload Chromatic CSV</label>
-        {/* <FileUpload onChange={handleFileUpload} />
-        {chromaticData.length > 0 && <AreaChart data={chromaticData} />} */}
+
+        <FileUpload />
       </div>
     </main>
   );

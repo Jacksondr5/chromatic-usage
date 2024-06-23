@@ -2,7 +2,7 @@ import {
   type ChromaticCsv,
   ParseErrorMessages,
   parseChromaticCsv,
-} from "../parseChromaticCsv";
+} from "../server/parseChromaticCsv";
 
 const csvHeader =
   "Date,App ID,Build ID,Repository slug,Branch name,Build number,Skipped snapshots,Chrome snapshots,Firefox snapshots,Internet Explorer snapshots,Safari snapshots,Edge snapshots";
@@ -118,5 +118,10 @@ describe("parseChromaticCsv", () => {
     expect(() => parseChromaticCsv(csvWithBadHeader)).toThrow(
       ParseErrorMessages.MissingExpectedHeaders(["Date"]),
     );
+  });
+  it("should handle empty row", () => {
+    const csv = csvHeader + "\n";
+    const result = parseChromaticCsv(csv);
+    expect(result).toEqual([]);
   });
 });
