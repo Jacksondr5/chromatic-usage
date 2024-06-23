@@ -34,28 +34,12 @@ export const FileUpload = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <Label htmlFor="chromatic-csv">Upload Chromatic CSV</Label>
       <Input
+        accept=".csv"
         id="chromatic-csv"
         type="file"
-        accept=".csv"
-        // onChange={async (e) => {
-        //   const file = e.target.files ? e.target.files[0] : undefined;
-        //   if (!file) return;
-        //   const reader = new FileReader();
-        //   reader.onload = async (e) => {
-        //     const csv = e.target?.result;
-        //     if (typeof csv === "string") {
-        //       // console.log(csv);
-        //       const builds = parseChromaticCsv(csv);
-        //       // TODO: replace with trpc mutation
-        //       // await loadFile(builds);
-        //     }
-        //   };
-        //   reader.readAsText(file);
-        //   // onChange(e.target.files ? e.target.files[0] : undefined);
-        // }}
         {...register("file", { required: true })}
       />
       <Button type="submit">Upload</Button>
