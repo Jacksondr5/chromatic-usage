@@ -1,11 +1,13 @@
 import * as Plot from "@observablehq/plot";
 import { useRef, useEffect } from "react";
+import { cn } from "~/lib/utils";
 
 export type BaseChartProps = {
+  className?: string;
   options?: Plot.PlotOptions;
 };
 
-export const BaseChart = ({ options }: BaseChartProps) => {
+export const BaseChart = ({ className, options }: BaseChartProps) => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!options || !ref.current) return;
@@ -19,5 +21,5 @@ export const BaseChart = ({ options }: BaseChartProps) => {
     ref.current.append(plot);
     return () => plot.remove();
   }, [options, ref]);
-  return <div className="h-96 w-1/3" ref={ref} role="figure" />;
+  return <div className={cn("mb-4", className)} ref={ref} role="figure" />;
 };

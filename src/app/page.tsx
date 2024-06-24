@@ -1,7 +1,10 @@
 "use client";
 import { FileUpload } from "./FileUpload";
-import { CumulativeDailySnapshotsChart } from "./components/CumulativeDailySnapshotsChart";
-import { DailySnapshotsByAppChart } from "./components/DailySnapshotsByAppChart";
+import { CumulativeSnapshotsByApp } from "./components/CumulativeSnapshotsByApp";
+import { CumulativeSnapshotsByType } from "./components/CumulativeSnapshotsByType";
+import { DailySnapshotsByApp } from "./components/DailySnapshotsByApp";
+import { NormalizedTurbosnapsByApp } from "./components/NormalizedTurbosnapsByApp";
+import { DailyNormalizedTurbosnaps } from "./components/DailyNormalizedTurbosnaps";
 
 export default function HomePage() {
   return (
@@ -10,9 +13,12 @@ export default function HomePage() {
         <h1>Chromatic Usage Tool</h1>
 
         <FileUpload />
-        <div className="flex w-full gap-10">
-          <DailySnapshotsByAppChart />
-          <CumulativeDailySnapshotsChart />
+        <div className="grid grid-flow-row grid-cols-3 gap-5">
+          <DailySnapshotsByApp />
+          <CumulativeSnapshotsByApp />
+          <CumulativeSnapshotsByType />
+          <DailyNormalizedTurbosnaps />
+          <NormalizedTurbosnapsByApp />
         </div>
       </div>
     </main>

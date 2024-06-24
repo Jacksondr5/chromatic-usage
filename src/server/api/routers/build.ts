@@ -7,6 +7,7 @@ import {
   fillGroupByDate,
   fillGroupByDateAndApp,
 } from "~/server/processGroupByDateData";
+import { merge } from "d3-array";
 
 type ProcessedCsv = ChromaticCsv & {
   totalSnapshots: number;
@@ -75,23 +76,11 @@ export const buildRouter = createTRPCRouter({
       .groupBy((x) => [x.appName, dateSql])
       .orderBy(asc(builds.date))
       .execute();
-    const filledData = fillGroupByDateAndApp(
+    return fillGroupByDateAndApp(
       // TODO: Make this more efficient by putting it in the SQL query
       dailyBuilds.map((x) => ({ ...x, appName: x.appName ?? "Unknown" })),
       { totalSnapshots: 0 },
     );
-    const appNames = [...new Set(filledData.map((x) => x.appName))];
-    const cumulativeSnapshots: Record<string, number> = {};
-    appNames.forEach((appName) => {
-      cumulativeSnapshots[appName] = 0;
-    });
-    return filledData.map((x) => {
-      cumulativeSnapshots[x.appName]! += x.totalSnapshots;
-      return {
-        ...x,
-        cumulativeSnapshots: cumulativeSnapshots[x.appName] ?? 0,
-      };
-    });
   }),
 
   dailySnapshots: publicProcedure.query(async ({ ctx }) => {
@@ -100,18 +89,45 @@ export const buildRouter = createTRPCRouter({
       .select({
         date: dateSql,
         totalSnapshots: sql<number>`sum(totalSnapshots)`,
+        skippedSnapshots: sql<number>`sum(skippedSnapshots)`,
       })
       .from(builds)
       .groupBy(dateSql)
       .orderBy(asc(builds.date))
       .execute();
-    let cumulativeSnapshots = 0;
-    const res = fillGroupByDate(dailyBuilds, {
+    const thing = fillGroupByDate(dailyBuilds, {
       totalSnapshots: 0,
-    }).map((x) => ({
-      ...x,
-      cumulativeSnapshots: (cumulativeSnapshots += x.totalSnapshots),
-    }));
-    return res;
+      skippedSnapshots: 0,
+    }).map((x) => [
+      { date: x.date, type: "totalSnapshots", value: x.totalSnapshots },
+      { date: x.date, type: "skippedSnapshots", value: x.skippedSnapshots },
+    ]);
+    return merge<{ date: Date; type: string; value: number }>(thing);
+  }),
+
+  snapshotsByApp: publicProcedure.query(async ({ ctx }) => {
+    const totalSnapshotsByApp = await ctx.db
+      .select({
+        appName: chromaticApps.name,
+        totalSnapshots: sql<number>`sum(totalSnapshots)`,
+        skippedSnapshots: sql<number>`sum(skippedSnapshots)`,
+      })
+      .from(builds)
+      .leftJoin(chromaticApps, eq(builds.appId, chromaticApps.id))
+      .groupBy(builds.appId)
+      .execute();
+    const split = totalSnapshotsByApp.map((x) => [
+      {
+        appName: x.appName ?? "Unknown",
+        type: "skippedSnapshots",
+        value: x.skippedSnapshots,
+      },
+      {
+        appName: x.appName ?? "Unknown",
+        type: "totalSnapshots",
+        value: x.totalSnapshots,
+      },
+    ]);
+    return merge<{ type: string; value: number; appName: string }>(split);
   }),
 });
