@@ -6,6 +6,7 @@ type GroupByDateData = {
 
 type UseDateType<T extends GroupByDateData> = Omit<T, "date"> & { date: Date };
 
+// TODO: There's probably a D3 or Plot function that does this
 function fill<T extends GroupByDateData, K>(
   data: T[],
   doFill: (currentDate: dayjs.Dayjs) => K[],

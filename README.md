@@ -18,19 +18,16 @@ TODO:
   - [x] cumulative
   - [x] by app
   - [ ] trend line
-- [ ] Use of snapshots over time in a single app
-  - [ ] overall
-  - [ ] by browser
-- [ ] Compare use of snapshots between month
-  - [ ] overall
-  - [ ] by app
-- [ ] Compare skipped snapshots to total snapshots
-  - [ ] overall
-  - [ ] by app
-  - [ ] maybe also as a percentage of snapshots? Since for every 1 un-skipped snapshot, there's actually N snapshots taken because its used for all browsers
+- [x] Compare skipped snapshots to total snapshots
+  - [x] overall
+  - [x] by app
+- [ ] All of the above, but filtered to a specific app
 - [ ] some kind of per-branch analysis?
   - [ ] what branches were the most expensive?
   - [ ] were there any stand-outs?
+- [ ] Compare use of snapshots between month
+  - [ ] overall
+  - [ ] by app
 
 ## Querying
 
