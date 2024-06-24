@@ -1,4 +1,4 @@
-CREATE TABLE `test_builds` (
+CREATE TABLE IF NOT EXISTS `test_builds` (
 	`buildId` text PRIMARY KEY NOT NULL,
 	`appId` text NOT NULL,
 	`date` text NOT NULL,
@@ -13,10 +13,10 @@ CREATE TABLE `test_builds` (
 	`internetExplorerSnapshots` integer
 );
 --> statement-breakpoint
-CREATE TABLE `test_apps` (
+CREATE TABLE IF NOT EXISTS `test_apps` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL
 );
 --> statement-breakpoint
-CREATE INDEX `appId_idx` ON `test_builds` (`appId`);--> statement-breakpoint
-CREATE INDEX `branch_idx` ON `test_builds` (`branch`);
+CREATE INDEX IF NOT EXISTS `appId_idx` ON `test_builds` (`appId`);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS `branch_idx` ON `test_builds` (`branch`);

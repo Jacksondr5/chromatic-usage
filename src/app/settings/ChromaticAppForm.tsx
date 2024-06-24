@@ -14,7 +14,6 @@ export const ChromaticAppForm = () => {
   const { register, handleSubmit } = useForm<FormInputs>();
   const createChromaticApp = api.chromaticApp.add.useMutation();
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    console.log(data);
     createChromaticApp.mutate(data);
   };
 

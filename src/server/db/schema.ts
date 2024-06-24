@@ -8,29 +8,32 @@ import { index, int, sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
  */
 export const createTable = sqliteTableCreator((name) => `test_${name}`);
 
+export const chromaticApps = createTable("apps", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+});
+
 export const builds = createTable(
   "builds",
   {
     buildId: text("buildId").primaryKey(),
-    appId: text("appId").notNull(),
+    appId: text("appId")
+      .notNull()
+      .references(() => chromaticApps.id),
     date: text("date").notNull(),
     repositorySlug: text("repositorySlug").notNull(),
     branch: text("branch").notNull(),
     buildNumber: int("buildNumber").notNull(),
-    skippedSnapshots: int("skippedSnapshots"),
-    chromeSnapshots: int("chromeSnapshots"),
-    firefoxSnapshots: int("firefoxSnapshots"),
-    safariSnapshots: int("safariSnapshots"),
-    edgeSnapshots: int("edgeSnapshots"),
-    internetExplorerSnapshots: int("internetExplorerSnapshots"),
+    skippedSnapshots: int("skippedSnapshots").notNull(),
+    chromeSnapshots: int("chromeSnapshots").notNull(),
+    firefoxSnapshots: int("firefoxSnapshots").notNull(),
+    safariSnapshots: int("safariSnapshots").notNull(),
+    edgeSnapshots: int("edgeSnapshots").notNull(),
+    internetExplorerSnapshots: int("internetExplorerSnapshots").notNull(),
+    totalSnapshots: int("totalSnapshots").notNull(),
   },
   (table) => ({
     appIdIndex: index("appId_idx").on(table.appId),
     branchIndex: index("branch_idx").on(table.branch),
   }),
 );
-
-export const chromaticApps = createTable("apps", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-});
