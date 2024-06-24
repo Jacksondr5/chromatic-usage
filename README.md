@@ -8,9 +8,9 @@ TODO:
 - [x] Store app ID -> name in DB
   - [ ] prompt for it if needed
 - [ ] Add graphs for the usage
-- [ ] Add column for total snapshots per build
+- [x] Add column for total snapshots per build
 - [ ] Add error checking when you upload a CSV that the apps exist. Direct people to settings.
-<!-- - [ ] Setup Vercel deployment -->
+- [ ] Refresh on upload
 
 # Data views
 
