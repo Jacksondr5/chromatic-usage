@@ -1,9 +1,12 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { builds, chromaticApps } from "~/server/db/schema";
 import { type ChromaticCsv } from "~/server/parseChromaticCsv";
+import {
+  fillGroupByDate,
+  fillGroupByDateAndApp,
+} from "~/server/processGroupByDateData";
 
 type ProcessedCsv = ChromaticCsv & {
   totalSnapshots: number;
@@ -61,22 +64,54 @@ export const buildRouter = createTRPCRouter({
 
   dailySnapshotsByApp: publicProcedure.query(async ({ ctx }) => {
     const dateSql = sql<string>`date(date)`;
-    const res = await ctx.db
+    const dailyBuilds = await ctx.db
       .select({
         appName: chromaticApps.name,
         date: dateSql,
-        chromeSnapshots: sql<number>`sum(chromeSnapshots)`,
-        firefoxSnapshots: sql<number>`sum(firefoxSnapshots)`,
-        safariSnapshots: sql<number>`sum(safariSnapshots)`,
-        edgeSnapshots: sql<number>`sum(edgeSnapshots)`,
-        internetExplorerSnapshots: sql<number>`sum(internetExplorerSnapshots)`,
         totalSnapshots: sql<number>`sum(totalSnapshots)`,
       })
       .from(builds)
       .leftJoin(chromaticApps, eq(builds.appId, chromaticApps.id))
       .groupBy((x) => [x.appName, dateSql])
-      .orderBy(desc(builds.date))
+      .orderBy(asc(builds.date))
       .execute();
+    const filledData = fillGroupByDateAndApp(
+      // TODO: Make this more efficient by putting it in the SQL query
+      dailyBuilds.map((x) => ({ ...x, appName: x.appName ?? "Unknown" })),
+      { totalSnapshots: 0 },
+    );
+    const appNames = [...new Set(filledData.map((x) => x.appName))];
+    const cumulativeSnapshots: Record<string, number> = {};
+    appNames.forEach((appName) => {
+      cumulativeSnapshots[appName] = 0;
+    });
+    return filledData.map((x) => {
+      cumulativeSnapshots[x.appName]! += x.totalSnapshots;
+      return {
+        ...x,
+        cumulativeSnapshots: cumulativeSnapshots[x.appName] ?? 0,
+      };
+    });
+  }),
+
+  dailySnapshots: publicProcedure.query(async ({ ctx }) => {
+    const dateSql = sql<string>`date(date)`;
+    const dailyBuilds = await ctx.db
+      .select({
+        date: dateSql,
+        totalSnapshots: sql<number>`sum(totalSnapshots)`,
+      })
+      .from(builds)
+      .groupBy(dateSql)
+      .orderBy(asc(builds.date))
+      .execute();
+    let cumulativeSnapshots = 0;
+    const res = fillGroupByDate(dailyBuilds, {
+      totalSnapshots: 0,
+    }).map((x) => ({
+      ...x,
+      cumulativeSnapshots: (cumulativeSnapshots += x.totalSnapshots),
+    }));
     return res;
   }),
 });
