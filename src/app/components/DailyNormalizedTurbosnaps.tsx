@@ -25,7 +25,7 @@ export const DailyNormalizedTurbosnaps = () => {
       ],
       title: "Daily Normalized Turbosnaps",
       x: { type: "band" },
-      y: { label: "% of Snapshots" },
+      y: { label: "% of Snapshots", transform: (y) => y * 100 },
     } satisfies Plot.PlotOptions;
   }
   return <BaseChart options={options} />;

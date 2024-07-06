@@ -99,8 +99,8 @@ export const buildRouter = createTRPCRouter({
       totalSnapshots: 0,
       skippedSnapshots: 0,
     }).map((x) => [
-      { date: x.date, type: "totalSnapshots", value: x.totalSnapshots },
-      { date: x.date, type: "skippedSnapshots", value: x.skippedSnapshots },
+      { date: x.date, type: "Total Snapshots", value: x.totalSnapshots },
+      { date: x.date, type: "Skipped Snapshots", value: x.skippedSnapshots },
     ]);
     return merge<{ date: Date; type: string; value: number }>(thing);
   }),
@@ -119,12 +119,12 @@ export const buildRouter = createTRPCRouter({
     const split = totalSnapshotsByApp.map((x) => [
       {
         appName: x.appName ?? "Unknown",
-        type: "skippedSnapshots",
+        type: "Skipped Snapshots",
         value: x.skippedSnapshots,
       },
       {
         appName: x.appName ?? "Unknown",
-        type: "totalSnapshots",
+        type: "Total Snapshots",
         value: x.totalSnapshots,
       },
     ]);
