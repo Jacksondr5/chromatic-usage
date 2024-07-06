@@ -4,12 +4,15 @@ import {
   parseChromaticCsv,
 } from "../server/parseChromaticCsv";
 
-const csvHeader =
-  "Date,App ID,Build ID,Repository slug,Branch name,Build number,Skipped snapshots,Chrome snapshots,Firefox snapshots,Internet Explorer snapshots,Safari snapshots,Edge snapshots";
+const csvHeader = (skippedSnapshotsHeader = "Skipped snapshots") =>
+  `Date,App ID,Build ID,Repository slug,Branch name,Build number,${skippedSnapshotsHeader},Chrome snapshots,Firefox snapshots,Internet Explorer snapshots,Safari snapshots,Edge snapshots`;
 const s = (value?: string | number, omitComma = false) =>
   `${value ?? ""}${omitComma ? "" : ","}`;
 type TestChromaticCsv = Partial<Omit<ChromaticCsv, "date">> & { date?: string };
-const buildCsv = (data: TestChromaticCsv[]) => {
+const buildCsv = (
+  data: TestChromaticCsv[],
+  skippedSnapshotsHeader?: string,
+) => {
   const csvData = data
     .map(
       (x) =>
@@ -27,11 +30,11 @@ const buildCsv = (data: TestChromaticCsv[]) => {
         s(x.edgeSnapshots, true),
     )
     .join("\n");
-  return `${csvHeader}\n${csvData}`;
+  return `${csvHeader(skippedSnapshotsHeader)}\n${csvData}`;
 };
 describe("parseChromaticCsv", () => {
   it("should return an empty array when no data is present", () => {
-    const csv = csvHeader;
+    const csv = csvHeader();
     const result = parseChromaticCsv(csv);
     expect(result).toEqual([]);
   });
@@ -120,8 +123,51 @@ describe("parseChromaticCsv", () => {
     );
   });
   it("should handle empty row", () => {
-    const csv = csvHeader + "\n";
+    const csv = csvHeader() + "\n";
     const result = parseChromaticCsv(csv);
     expect(result).toEqual([]);
+  });
+  it('should handle the report containing either "Skipped snapshots" or "TurboSnaps"', () => {
+    const data = [
+      {
+        date: "2024-06-03 05:08:44",
+        appId: "123",
+        buildId: "456",
+        repositorySlug: "jacksondr5/chromatic-usage",
+        branch: "main",
+        buildNumber: 1,
+        skippedSnapshots: 2,
+        chromeSnapshots: 3,
+        firefoxSnapshots: 4,
+        internetExplorerSnapshots: 5,
+        safariSnapshots: 6,
+        edgeSnapshots: 7,
+      },
+    ];
+    const expected = [
+      {
+        date: "2024-06-03 05:08:44",
+        appId: "123",
+        buildId: "456",
+        repositorySlug: "jacksondr5/chromatic-usage",
+        branch: "main",
+        buildNumber: 1,
+        skippedSnapshots: 2,
+        chromeSnapshots: 3,
+        firefoxSnapshots: 4,
+        internetExplorerSnapshots: 5,
+        safariSnapshots: 6,
+        edgeSnapshots: 7,
+      },
+    ];
+
+    const skippedSnapshotsHeaderCsv = buildCsv(data);
+    const skippedSnapshotsHeaderResult = parseChromaticCsv(
+      skippedSnapshotsHeaderCsv,
+    );
+    expect(skippedSnapshotsHeaderResult).toEqual(expected);
+    const turboSnapHeaderCsv = buildCsv(data, "TurboSnaps");
+    const turboSnapHeaderResult = parseChromaticCsv(turboSnapHeaderCsv);
+    expect(turboSnapHeaderResult).toEqual(expected);
   });
 });
