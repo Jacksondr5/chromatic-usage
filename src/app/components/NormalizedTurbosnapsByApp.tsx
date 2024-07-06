@@ -26,7 +26,7 @@ export const NormalizedTurbosnapsByApp = () => {
       ],
       title: "Normalized Turbosnaps By App",
       y: { label: "App Name" },
-      x: { label: "% of Snapshots" },
+      x: { label: "% of Snapshots", transform: (x) => x * 100 },
     } satisfies Plot.PlotOptions;
   }
   return <BaseChart className="col-span-1" options={options} />;

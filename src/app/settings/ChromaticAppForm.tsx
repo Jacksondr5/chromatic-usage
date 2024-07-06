@@ -25,7 +25,7 @@ export const ChromaticAppForm = () => {
       <Input
         className="w-5/12"
         type="text"
-        placeholder="App Name"
+        placeholder="Project Name"
         {...register("name", { required: true })}
       />
       <Input
